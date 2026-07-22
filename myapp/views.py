@@ -80,8 +80,10 @@ def chat_upload_image(request):
 # API kalitlar hech qachon kodga yozilmaydi — Render'ning "Environment Variables"
 # bo'limidan GEMINI_API_KEY va GROQ_API_KEY nomlari bilan o'qib olinadi.
 
+TOLKIEN_KEYWORDS=['gandalf','frodo','aragorn','legolas','gimli','sauron','saruman','mordor','shire','hobbit','lotr','uzuk','ring','middle-earth','o'rta yer','orta yer','elf','orc','rohan','gondor','rivendell','valinor','numenor']
+
 GANDALF_SYSTEM_PROMPT = (
-    "Sen 'Gandalf' ismli, donishmand, mehribon va sal hazilkash ohangdagi "
+    "Sen Gandalfsan. Faqat Tolkien yaratgan O'rta Yer olami bo'yicha javob beradigan "
     "yordamchi sehrgarsan. O'zbek tilida javob ber. Javoblaring qisqa, aniq va "
     "foydali bo'lsin, lekin gohida donishmandona metafora yoki hikmat bilan "
     "boyitib qo'y. Faqat foydalanuvchi so'ragan savolga javob ber; hech qanday "
@@ -131,6 +133,8 @@ def ask_gandalf(request):
         return JsonResponse({'error': "Noto'g'ri so'rov"}, status=400)
 
     question = (data.get('question') or '').strip()[:1000]
+    if not any(k in question.lower() for k in TOLKIEN_KEYWORDS):
+        return JsonResponse({'answer':'Men Gandalfman. Men faqat Tolkien yaratgan Oʻrta Yer olami haqida bilimga egaman. Bu savolga javob bera olmayman.'})
     if not question:
         return JsonResponse({'error': "Savolingizni yozing"}, status=400)
 
