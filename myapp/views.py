@@ -80,7 +80,31 @@ def chat_upload_image(request):
 # API kalitlar hech qachon kodga yozilmaydi — Render'ning "Environment Variables"
 # bo'limidan GEMINI_API_KEY va GROQ_API_KEY nomlari bilan o'qib olinadi.
 
-TOLKIEN_KEYWORDS=['gandalf','frodo','aragorn','legolas','gimli','sauron','saruman','mordor','shire','hobbit','lotr','uzuk','ring','middle-earth','o'rta yer','orta yer','elf','orc','rohan','gondor','rivendell','valinor','numenor']
+TOLKIEN_KEYWORDS=[
+    "gandalf",
+    "frodo",
+    "aragorn",
+    "legolas",
+    "gimli",
+    "sauron",
+    "saruman",
+    "mordor",
+    "shire",
+    "hobbit",
+    "lotr",
+    "uzuk",
+    "ring",
+    "middle-earth",
+    "o'rta yer",
+    "orta yer",
+    "elf",
+    "orc",
+    "rohan",
+    "gondor",
+    "rivendell",
+    "valinor",
+    "numenor",
+]
 
 GANDALF_SYSTEM_PROMPT = (
     "Sen Gandalfsan. Faqat Tolkien yaratgan O'rta Yer olami bo'yicha javob beradigan "
