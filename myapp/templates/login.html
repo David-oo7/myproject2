@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirish — Uzuklar Hukmdori</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#c9a34e; --gold-light:#e8d18a; --bg-dark:#0b0d0a; --bg-panel:#12160f;
+    --ink:#e6e0cf; --ink-dim:#a89f8a; --line: rgba(201,163,78,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background: radial-gradient(ellipse at top, #1a1f14 0%, var(--bg-dark) 60%);
+    color:var(--ink); font-family:'Cormorant Garamond', serif; font-size:19px;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px;
+  }
+  h1,.brand{ font-family:'Cinzel', serif; letter-spacing:.04em; }
+  .card{
+    background:var(--bg-panel); border:1px solid var(--line); padding:44px 40px;
+    max-width:420px; width:100%; text-align:center;
+  }
+  .ring-glyph{
+    width:56px;height:56px;border-radius:50%; margin:0 auto 20px;
+    border:3px solid var(--gold); box-shadow:0 0 24px rgba(201,163,78,.4);
+  }
+  h1{ color:var(--gold-light); font-size:1.6rem; margin-bottom:8px; }
+  .sub{ color:var(--ink-dim); font-size:.95rem; margin-bottom:28px; }
+  form{ text-align:left; display:flex; flex-direction:column; gap:16px; }
+  label{ font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:6px; }
+  input{
+    width:100%; background:#0e120c; border:1px solid var(--line); color:var(--ink);
+    padding:10px 14px; font-family:'Cormorant Garamond',serif; font-size:1rem;
+  }
+  ul.errorlist{ list-style:none; color:#e08a7d; font-size:.85rem; margin-top:4px; }
+  .btn{
+    margin-top:8px; border:1px solid var(--gold); background:rgba(201,163,78,.08); color:var(--gold-light);
+    padding:12px; font-family:'Cinzel',serif; font-size:.8rem; letter-spacing:.14em; text-transform:uppercase;
+    cursor:pointer; transition:.2s;
+  }
+  .btn:hover{ background:var(--gold); color:#141810; }
+  .switch{ margin-top:22px; color:var(--ink-dim); font-size:.9rem; }
+  .switch a{ color:var(--gold-light); text-decoration:none; }
+  .switch a:hover{ text-decoration:underline; }
+  .back{ display:block; margin-top:18px; color:var(--ink-dim); font-size:.85rem; text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="ring-glyph"></div>
+    <h1>Kirish</h1>
+    <p class="sub">Hisobingizga kiring va safarni davom ettiring</p>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {{ field.errors }}
+        </div>
+      {% endfor %}
+      {% if form.non_field_errors %}
+        <ul class="errorlist">
+          {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+      <button type="submit" class="btn">Kirish</button>
+    </form>
+    <p class="switch">Hisobingiz yo'qmi? <a href="{% url 'register' %}">Ro'yxatdan o'ting</a></p>
+    <a href="{% url 'home' %}" class="back">← Bosh sahifaga qaytish</a>
+  </div>
+</body>
+</html>

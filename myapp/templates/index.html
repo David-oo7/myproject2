@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uzuklar Hukmdori — Fan Sahifasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#c9a34e;
+    --gold-light:#e8d18a;
+    --bg-dark:#0b0d0a;
+    --bg-panel:#12160f;
+    --ink:#e6e0cf;
+    --ink-dim:#a89f8a;
+    --line: rgba(201,163,78,.35);
+    /* Menyu orqa foniga rasm qo'yish uchun: media/nav-bg.jpg fayliga rasm joylashtiring — avtomatik ko'rinadi */
+    --nav-bg-image: url('/media/nav-bg.jpg');
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(ellipse at top, #1a1f14 0%, var(--bg-dark) 60%);
+    color:var(--ink);
+    font-family:'Cormorant Garamond', serif;
+    font-size:19px;
+    line-height:1.7;
+  }
+  h1,h2,h3,.brand{ font-family:'Cinzel', serif; letter-spacing:.04em; }
+
+  a{color:var(--gold-light);}
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:18px;
+    padding:16px 6vw;
+    background:
+      linear-gradient(rgba(8,10,6,.88), rgba(8,10,6,.88)),
+      var(--nav-bg-image, none);
+    background-size:cover;
+    background-position:center;
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .menu-toggle-checkbox{
+    position:absolute; opacity:0; width:34px; height:34px; margin:0; cursor:pointer; z-index:60;
+  }
+  .menu-toggle{
+    display:flex; flex-direction:column; justify-content:center; gap:5px;
+    width:34px; height:34px; cursor:pointer; flex-shrink:0; pointer-events:none;
+  }
+  .menu-toggle span{
+    display:block; width:100%; height:2px; background:var(--gold); transition:.3s;
+  }
+  .menu-toggle-checkbox:checked ~ .menu-toggle span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .menu-toggle-checkbox:checked ~ .menu-toggle span:nth-child(2){ opacity:0; }
+  .menu-toggle-checkbox:checked ~ .menu-toggle span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+  .brand{ color:var(--gold); font-weight:700; font-size:1.3rem; }
+  .brand span{ color:var(--ink-dim); font-family:'Cormorant Garamond',serif; font-size:.95rem; display:block; letter-spacing:.15em; }
+  nav ul{
+    list-style:none; display:flex; flex-direction:column; gap:2px;
+    position:absolute; top:100%; left:0; right:0;
+    background:rgba(8,10,6,.97); border-bottom:1px solid var(--line);
+    max-height:0; overflow:hidden; transition:max-height .35s ease;
+  }
+  nav ul.open{ max-height:600px; }
+  .menu-toggle-checkbox:checked ~ ul{ max-height:600px; }
+  nav ul li{ border-top:1px solid rgba(201,163,78,.12); }
+  nav ul li a, nav ul li .nav-user{ display:block; padding:14px 6vw; }
+  nav a{
+    text-decoration:none; font-family:'Cinzel Decorative', 'Cinzel', serif;
+    font-weight:700; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase;
+    transition:.25s; white-space:nowrap; text-shadow:0 0 12px rgba(0,0,0,.6);
+  }
+  /* O'rta Yer xalqlariga xos ranglar — har bir havola o'z ohangida */
+  nav li:nth-child(1) a{ color:#d9c27e; }               /* Shire — oltin jigarrang */
+  nav li:nth-child(2) a{ color:#c9a34e; }               /* Kitoblar — oltin */
+  nav li:nth-child(3) a{ color:#e0a05b; }               /* Qahramonlar — amber */
+  nav li:nth-child(4) a{ color:#8fbf9f; }               /* O'rta Yer — yashil */
+  nav li:nth-child(5) a{ color:#9ec5e8; }               /* Xalqlar — kumush-havorang */
+  nav li:nth-child(6) a{ color:#d98c8c; }               /* O'yin — qizg'ish */
+  nav li:nth-child(7) a{ color:#c9a3d9; }               /* Muhokama — binafsha */
+  nav li:nth-child(8) a{ color:#e8d18a; }               /* Gandalf — kulrang-oltin */
+  nav a:hover{ color:var(--gold-light); text-shadow:0 0 18px rgba(201,163,78,.7); }
+  .nav-user{
+    font-family:'Cinzel Decorative',serif; color:var(--gold-light); font-size:.8rem;
+    letter-spacing:.06em;
+  }
+  .nav-cta{
+    color:var(--gold-light) !important;
+  }
+
+  /* Kirish / Ro'yxatdan o'tish — hamburger menyudan tashqarida, doim ko'rinadi */
+  .nav-auth-bar{
+    margin-left:auto; display:flex; align-items:center; gap:16px;
+  }
+  .nav-auth-bar a{
+    text-decoration:none; font-family:'Cinzel Decorative','Cinzel',serif;
+    font-weight:700; font-size:.74rem; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink); white-space:nowrap; transition:.25s;
+    text-shadow:0 0 12px rgba(0,0,0,.6);
+  }
+  .nav-auth-bar a:hover{ color:var(--gold-light); }
+  .nav-auth-bar .nav-cta{
+    border:1px solid var(--gold); padding:7px 16px; color:var(--gold-light) !important;
+  }
+  .nav-auth-bar .nav-cta:hover{ background:var(--gold); color:#141810 !important; }
+  .nav-auth-bar .nav-user{
+    border:1px solid var(--line); padding:6px 14px; font-size:.76rem;
+  }
+  @media (max-width:520px){
+    .nav-auth-bar{ gap:10px; }
+    .nav-auth-bar a{ font-size:.66rem; }
+    .nav-auth-bar .nav-cta{ padding:6px 10px; }
+  }
+
+  .hero{
+    position:relative;
+    min-height:88vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:40px 6vw;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(201,163,78,.10), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0px, transparent 2px, transparent 4px);
+    pointer-events:none;
+  }
+  .ring-glyph{
+    width:74px;height:74px;border-radius:50%;
+    border:3px solid var(--gold);
+    box-shadow:0 0 30px rgba(201,163,78,.5), inset 0 0 12px rgba(201,163,78,.4);
+    margin-bottom:26px;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem,7vw,5rem);
+    color:var(--gold-light);
+    text-shadow:0 0 30px rgba(201,163,78,.35);
+    margin-bottom:10px;
+  }
+  .hero .subtitle{
+    font-family:'Cinzel',serif;
+    color:var(--ink-dim);
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    font-size:.85rem;
+    margin-bottom:28px;
+  }
+  .hero p.lead{
+    max-width:640px; color:var(--ink-dim); font-size:1.25rem; font-style:italic;
+    margin-bottom:34px;
+  }
+  .btn{
+    display:inline-block;
+    border:1px solid var(--gold);
+    color:var(--gold-light);
+    padding:12px 34px;
+    text-decoration:none;
+    font-family:'Cinzel',serif;
+    font-size:.8rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    transition:.25s;
+    background:rgba(201,163,78,.06);
+  }
+  .btn:hover{ background:var(--gold); color:#141810; box-shadow:0 0 25px rgba(201,163,78,.5);}
+
+  .divider{
+    display:flex; align-items:center; gap:16px;
+    max-width:360px; margin:56px auto; color:var(--gold);
+  }
+  .divider::before,.divider::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  section{ padding:90px 6vw; max-width:1100px; margin:0 auto; }
+  .eyebrow{
+    font-family:'Cinzel',serif; color:var(--gold); font-size:.78rem;
+    letter-spacing:.25em; text-transform:uppercase; text-align:center; margin-bottom:12px;
+  }
+  h2.section-title{
+    text-align:center; font-size:clamp(1.8rem,4vw,2.6rem); color:var(--ink); margin-bottom:14px;
+  }
+  .section-desc{ text-align:center; color:var(--ink-dim); max-width:680px; margin:0 auto 56px; font-size:1.15rem; }
+
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center; }
+  .about-card{
+    background:var(--bg-panel); border:1px solid var(--line); padding:34px;
+  }
+  .about-card h3{ color:var(--gold-light); font-size:1.3rem; margin-bottom:14px; }
+  .stat-row{ display:flex; gap:30px; margin-top:26px; flex-wrap:wrap; }
+  .stat{ text-align:center; }
+  .stat b{ display:block; font-family:'Cinzel',serif; color:var(--gold); font-size:1.6rem; }
+  .stat span{ color:var(--ink-dim); font-size:.85rem; text-transform:uppercase; letter-spacing:.08em; }
+
+  .timeline{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .vol{
+    display:block; text-decoration:none;
+    background:var(--bg-panel); border:1px solid var(--line); padding:30px 24px; text-align:center;
+    position:relative; transition:.25s; cursor:pointer;
+  }
+  .vol:hover{ border-color:var(--gold); transform:translateY(-6px); box-shadow:0 10px 30px rgba(0,0,0,.4); }
+  .vol .num{ font-family:'Cinzel',serif; color:var(--gold); font-size:.8rem; letter-spacing:.2em; margin-bottom:10px;}
+  .vol h3{ color:var(--ink); font-size:1.25rem; margin-bottom:12px; }
+  .vol p{ color:var(--ink-dim); font-size:1.02rem; margin-bottom:18px; }
+  .vol .dl{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--gold-light); border-top:1px solid var(--line); padding-top:16px; width:100%; justify-content:center;
+  }
+  .vol .dl svg{ width:14px; height:14px; }
+
+  .char-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:24px; }
+  .char-card{
+    background:var(--bg-panel); border:1px solid var(--line); padding:26px 22px;
+    text-align:center;
+  }
+  .char-icon{
+    width:56px;height:56px; margin:0 auto 16px; border-radius:50%;
+    border:2px solid var(--gold); display:flex; align-items:center; justify-content:center;
+    font-size:1.5rem; color:var(--gold-light);
+  }
+  .char-card h3{ color:var(--gold-light); font-size:1.15rem; margin-bottom:6px; }
+  .char-card .role{ color:var(--gold); font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; font-family:'Cinzel',serif; margin-bottom:10px; }
+  .char-card p{ color:var(--ink-dim); font-size:.98rem; }
+
+  .realm-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:26px; }
+  .realm-card{ border-left:3px solid var(--gold); padding:6px 0 6px 22px; }
+  .realm-card h3{ color:var(--ink); font-size:1.2rem; margin-bottom:8px; }
+  .realm-card p{ color:var(--ink-dim); }
+
+  /* RACES */
+  .race-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:24px; }
+  .race-card{
+    background:var(--bg-panel); border:1px solid var(--line); padding:28px 24px;
+    text-align:center; transition:.25s;
+  }
+  .race-card:hover{ border-color:var(--gold); transform:translateY(-4px); }
+  .race-icon{
+    width:54px;height:54px; margin:0 auto 16px; border-radius:50%;
+    border:2px solid var(--gold); display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem; color:var(--gold-light);
+  }
+  .race-card h3{ color:var(--gold-light); font-size:1.15rem; margin-bottom:10px; }
+  .race-card p{ color:var(--ink-dim); font-size:.95rem; line-height:1.6; text-align:left; }
+
+  .hero-mini{
+    margin-top:18px; padding-top:16px; border-top:1px solid var(--line);
+    display:flex; gap:12px; align-items:flex-start; text-align:left;
+  }
+  .hero-avatar{
+    flex-shrink:0; width:40px;height:40px; border-radius:50%;
+    border:1.5px solid var(--gold); display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; background:rgba(201,163,78,.06);
+  }
+  .hero-mini .hero-name{ font-family:'Cinzel',serif; color:var(--gold-light); font-size:.92rem; margin-bottom:2px; }
+  .hero-mini .hero-role{ color:var(--gold); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; font-family:'Cinzel',serif; margin-bottom:5px; }
+  .hero-mini .hero-bio{ color:var(--ink-dim); font-size:.88rem; line-height:1.5; }
+
+  /* GAME DOWNLOAD */
+  .game-box{
+    background:var(--bg-panel); border:1px solid var(--line);
+    padding:50px 6vw; text-align:center; max-width:680px; margin:0 auto;
+  }
+  .game-box .ring-glyph{ width:60px;height:60px; margin:0 auto 22px; }
+  .game-box h3{ color:var(--gold-light); font-size:1.4rem; margin-bottom:14px; }
+  .game-box p{ color:var(--ink-dim); margin-bottom:30px; }
+
+  /* CHAT */
+  .chat-box{
+    background:var(--bg-panel); border:1px solid var(--line);
+    max-width:680px; margin:0 auto; display:flex; flex-direction:column;
+  }
+  .chat-messages{
+    height:360px; overflow-y:auto; padding:22px 24px; display:flex; flex-direction:column; gap:14px;
+  }
+  .chat-msg{ border-bottom:1px solid rgba(201,163,78,.15); padding-bottom:10px; }
+  .chat-msg .who{ font-family:'Cinzel',serif; color:var(--gold); font-size:.78rem; letter-spacing:.08em; }
+  .chat-msg .when{ color:var(--ink-dim); font-size:.75rem; margin-left:8px; }
+  .chat-msg .txt{ color:var(--ink); margin-top:4px; }
+  .chat-empty{ color:var(--ink-dim); text-align:center; margin-top:30px; font-style:italic; }
+  .chat-form{
+    display:flex; gap:10px; padding:18px 20px; border-top:1px solid var(--line); flex-wrap:wrap;
+  }
+  .chat-form input[type=text]{
+    background:#0e120c; border:1px solid var(--line); color:var(--ink);
+    padding:10px 14px; font-family:'Cormorant Garamond',serif; font-size:1rem;
+  }
+  #chat-name{ width:130px; }
+  #chat-name[readonly]{ opacity:.85; cursor:not-allowed; border-color:var(--gold); }
+  #chat-text{ flex:1; min-width:160px; }
+  .chat-form input::placeholder{ color:var(--ink-dim); }
+  .chat-form button{
+    border:1px solid var(--gold); background:rgba(201,163,78,.08); color:var(--gold-light);
+    padding:10px 22px; font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase;
+    cursor:pointer; transition:.2s;
+  }
+  .chat-form button:hover{ background:var(--gold); color:#141810; }
+  .chat-status{ text-align:center; font-size:.78rem; color:var(--ink-dim); margin-top:12px; }
+  .chat-status.online{ color:#7bd88f; }
+  .chat-status.offline{ color:#d8817b; }
+
+  /* Rasm xabarlari */
+  .chat-img{
+    max-width:220px; max-height:220px; border-radius:4px; border:1px solid var(--line);
+    display:block; margin-top:4px; cursor:pointer;
+  }
+  .chat-sticker{ font-size:2.4rem; line-height:1; margin-top:2px; }
+
+  /* Ikonka tugmalar (stiker / rasm) */
+  .chat-icon-btn{
+    background:none; border:1px solid var(--line); color:var(--gold-light);
+    font-size:1.1rem; width:40px; height:40px; flex-shrink:0; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:.2s;
+    padding:0 !important;
+  }
+  .chat-icon-btn:hover{ border-color:var(--gold); background:rgba(201,163,78,.08) !important; color:var(--gold-light) !important; }
+  .chat-icon-btn.active{ border-color:var(--gold); background:rgba(201,163,78,.15) !important; }
+
+  /* Stiker paneli */
+  .sticker-panel{
+    display:none; padding:14px 20px; border-top:1px solid var(--line); background:rgba(0,0,0,.15);
+  }
+  .sticker-panel.open{ display:block; }
+  .sticker-grid{
+    display:grid; grid-template-columns:repeat(8, 1fr); gap:8px;
+  }
+  .sticker-btn{
+    background:none; border:1px solid transparent; font-size:1.4rem; padding:6px; cursor:pointer;
+    border-radius:4px; transition:.15s;
+  }
+  .sticker-btn:hover{ background:rgba(201,163,78,.15); border-color:var(--line); }
+  @media (max-width:520px){
+    .sticker-grid{ grid-template-columns:repeat(6, 1fr); }
+  }
+
+  /* GANDALF AI YORDAMCHISI */
+  .gandalf-box{
+    background:var(--bg-panel); border:1px solid var(--line);
+    max-width:680px; margin:0 auto; display:flex; flex-direction:column;
+  }
+  .gandalf-messages{
+    height:360px; overflow-y:auto; padding:22px 24px; display:flex; flex-direction:column; gap:16px;
+  }
+  .gandalf-msg{ display:flex; gap:12px; align-items:flex-start; }
+  .gandalf-msg.user-msg{ flex-direction:row-reverse; }
+  .gandalf-avatar{
+    flex-shrink:0; width:36px; height:36px; border-radius:50%;
+    border:1.5px solid var(--gold); display:flex; align-items:center; justify-content:center;
+    font-size:1rem; color:var(--gold-light); background:rgba(201,163,78,.08);
+  }
+  .gandalf-bubble{
+    background:#0e120c; border:1px solid var(--line); padding:10px 14px;
+    color:var(--ink); font-size:.98rem; line-height:1.55; max-width:75%;
+  }
+  .gandalf-msg.user-msg .gandalf-bubble{
+    background:rgba(201,163,78,.1); border-color:var(--gold);
+  }
+  .gandalf-msg.gandalf-error .gandalf-bubble{ color:#d8817b; border-color:#d8817b; }
+  .gandalf-form{
+    display:flex; gap:10px; padding:18px 20px; border-top:1px solid var(--line);
+  }
+  .gandalf-form input[type=text]{
+    flex:1; background:#0e120c; border:1px solid var(--line); color:var(--ink);
+    padding:10px 14px; font-family:'Cormorant Garamond',serif; font-size:1rem;
+  }
+  .gandalf-form input::placeholder{ color:var(--ink-dim); }
+  .gandalf-form button{
+    border:1px solid var(--gold); background:rgba(201,163,78,.08); color:var(--gold-light);
+    padding:10px 22px; font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase;
+    cursor:pointer; transition:.2s;
+  }
+  .gandalf-form button:hover{ background:var(--gold); color:#141810; }
+  .gandalf-form button:disabled{ opacity:.5; cursor:not-allowed; }
+  .gandalf-typing{ color:var(--ink-dim); font-style:italic; font-size:.9rem; }
+
+  footer{
+    border-top:1px solid var(--line); padding:40px 6vw; text-align:center;
+    color:var(--ink-dim); font-size:.9rem;
+  }
+  footer .ring-glyph{ width:34px;height:34px; margin:0 auto 16px; }
+  footer .fine{ font-size:.78rem; opacity:.6; margin-top:10px; max-width:560px; margin-left:auto; margin-right:auto; }
+
+  @media (max-width:800px){
+    .about-grid{ grid-template-columns:1fr; }
+    .timeline{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <input type="checkbox" id="menu-toggle" class="menu-toggle-checkbox">
+  <label for="menu-toggle" class="menu-toggle" aria-label="Menyu">
+    <span></span><span></span><span></span>
+  </label>
+  <div class="brand">Uzuklar Hukmdori<span>Fanlar sahifasi</span></div>
+
+  <div class="nav-auth-bar">
+    {% if user.is_authenticated %}
+      <span class="nav-user">{{ user.username }}</span>
+      <a href="{% url 'logout' %}">Chiqish</a>
+    {% else %}
+      <a href="{% url 'login' %}">Kirish</a>
+      <a href="{% url 'register' %}" class="nav-cta">Ro'yxatdan o'tish</a>
+    {% endif %}
+  </div>
+
+  <ul id="nav-menu">
+    <li><a href="#about">Asar haqida</a></li>
+    <li><a href="#timeline">Kitoblar</a></li>
+    <li><a href="#characters">Qahramonlar</a></li>
+    <li><a href="#realms">O'rta yer</a></li>
+    <li><a href="#races">Orta yerdagi xalqlar</a></li>
+    <li><a href="#game">O'yin</a></li>
+    <li><a href="#chat">Muhokama</a></li>
+    <li><a href="#gandalf">Gandalf</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="ring-glyph"></div>
+  <h1>Uzuklar Hukmdori</h1>
+  <div class="subtitle">O'rta Yer haqidagi afsona</div>
+  <p class="lead">Kichkina hobbitning yelkasiga tushgan og'ir yuk — dunyoni qutqarish uchun bitta uzukni yo'q qilish safari haqidagi buyuk sarguzasht qissasi.</p>
+  <a href="#about" class="btn">Sarguzashtni boshlash</a>
+</section>
+
+<section id="about">
+  <div class="eyebrow">Kirish</div>
+  <h2 class="section-title">Asar haqida</h2>
+  <p class="section-desc">Zamonaviy fantastika janrining poydevorini qo'ygan asarlardan biri.</p>
+
+  <div class="about-grid">
+    <div>
+      <p>"Uzuklar Hukmdori" — ingliz yozuvchisi va tilshunosi J. R. R. Tolkien tomonidan yaratilgan, O'rta Yer deb nomlangan xayoliy dunyoda kechadigan epik voqealar majmuasi. Asar 1950-yillarning o'rtalarida uch jild holida nashr etilgan va o'shandan beri butun dunyo bo'ylab fantastika janriga eng katta ta'sir ko'rsatgan asarlardan biri sanaladi.</p>
+      <p style="margin-top:18px;">Voqealar markazida — yovuz kuchga ega bo'lgan bitta uzukni yo'q qilish uchun xavfli yo'lga chiqqan kichik hobbitlar guruhi, ularga yordam beruvchi sehrgar, jangchilar va turli xalqlar vakillari turadi. Yo'l davomida do'stlik, sadoqat va kichik yurakning katta ishlarga qodirligi haqidagi g'oyalar tasvirlanadi.</p>
+      <div class="stat-row">
+        <div class="stat"><b>3</b><span>Jild</span></div>
+        <div class="stat"><b>1950s</b><span>Nashr yillari</span></div>
+        <div class="stat"><b>∞</b><span>Muxlislar</span></div>
+      </div>
+    </div>
+    <div class="about-card">
+      <h3>Muallif haqida qisqacha</h3>
+      <p>J. R. R. Tolkien — Oksford universitetida qadimgi ingliz tili va adabiyoti bo'yicha professor bo'lgan, tilshunoslik va qadimiy afsonalarga bo'lgan qiziqishi asosida butun bir dunyo — tarixi, tillari va xalqlari bilan — yaratgan yozuvchi. Uning ishi keyinchalik yuzlab zamonaviy fantastika asarlariga ilhom bergan.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">⟡</div>
+
+<section id="timeline">
+  <div class="eyebrow">Trilogiya</div>
+  <h2 class="section-title">Uch jild</h2>
+  <p class="section-desc">Asar an'anaviy ravishda uch qismga bo'lib nashr etiladi.</p>
+
+  <div class="timeline">
+    <a class="vol" href="/media/books/qism1.pdf" download>
+      <div class="num">I qism</div>
+      <h3>Uzuk Sheriklari</h3>
+      <p>Xavfli safar boshlanadi: kichik guruh Shire diyoridan yo'lga chiqib, sheriklik ahdini beradi.</p>
+      <span class="dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg> PDF yuklab olish</span>
+    </a>
+    <a class="vol" href="/media/books/qism2.pdf" download>
+      <div class="num">II qism</div>
+      <h3>Ikki Minora</h3>
+      <p>Guruh ayrilib ketadi, har bir yo'l o'z sinovlarini keltiradi va urushning shamoli kuchayadi.</p>
+      <span class="dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg> PDF yuklab olish</span>
+    </a>
+    <a class="vol" href="/media/books/qism3.pdf" download>
+      <div class="num">III qism</div>
+      <h3>Qirolning Qaytishi</h3>
+      <p>Buyuk jang va yakuniy safar — taqdir hal bo'ladigan so'nggi qadamlar.</p>
+      <span class="dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg> PDF yuklab olish</span>
+    </a>
+  </div>
+</section>
+
+<div class="divider">⟡</div>
+
+<section id="characters">
+  <div class="eyebrow">Qahramonlar</div>
+  <h2 class="section-title">Sheriklik a'zolari</h2>
+  <p class="section-desc">Turli xalqlardan bo'lgan qahramonlar bir maqsad yo'lida birlashadi.</p>
+
+  <div class="char-grid">
+    <div class="char-card">
+      <div class="char-icon">🌿</div>
+      <h3>Kichik hobbit</h3>
+      <div class="role">Frodo Baggins</div>
+      <p>Tinch diyordan chiqib, og'ir vazifani zimmasiga olgan kichkina va sodda qalbli qahramon.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-icon">✦</div>
+      <h3>Kulrang sayohatchi</h3>
+      <div class="role">Gendalf</div>
+      <p>Donishmand va qudratli maslahatchi, guruhni xavf-xatarlar orasida yo'naltiruvchi ustoz.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-icon">⚔</div>
+      <h3>Yashirin meros vorisi</h3>
+      <div class="role">Aragorn</div>
+      <p>Qadimiy qirollik naslidan bo'lgan Aratorn o`g`li Aragorn, o'z taqdirini hali to'liq qabul qilmagan jangchi.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-icon">🏹</div>
+      <h3>O'rmon farzandi</h3>
+      <div class="role">Legolas</div>
+      <p>Otkir ko'zli va tezkor,Gimlining yaqin do`sti boshqa xalqlarga ehtiyotkorlik bilan qaraydigan elf vakili.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-icon">🪓</div>
+      <h3>Tog' o'g'loni</h3>
+      <div class="role">Gimli</div>
+      <p>Kuchli va sodiq, o'z xalqining qadimiy an'analarini g'urur bilan olib yuruvchi mitti.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-icon">🌾</div>
+      <h3>Sodiq bog'bon</h3>
+      <div class="role">Sem</div>
+      <p>Eng og'ir damlarda ham do'stini tark etmagan, sodiqligi bilan ajralib turgan hamroh.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">⟡</div>
+
+<section id="realms">
+  <div class="eyebrow">Geografiya</div>
+  <h2 class="section-title">O'rta Yer diyorlari</h2>
+  <p class="section-desc">Voqealar bir nechta xayoliy o'lka va shaharlarda kechadi.</p>
+
+  <div class="realm-grid">
+    <div class="realm-card">
+      <h3>Shire</h3>
+      <p>Yashil tepaliklar va tinch qishloqlardan iborat, hobbitlar yashaydigan osoyishta diyor.</p>
+    </div>
+    <div class="realm-card">
+      <h3>Rivendell</h3>
+      <p>Vodiyda joylashgan, elflar boshpana topgan qadimiy va donishmand shahar.</p>
+    </div>
+    <div class="realm-card">
+      <h3>Rohan</h3>
+      <p>Keng dashtlarda otliq jangchilari yashaydigan qudratli qirollik.</p>
+    </div>
+    <div class="realm-card">
+      <h3>Gondor</h3>
+      <p>Toshdan qad rostlagan buyuk qal'a-shahar, qadimiy qirollikning so'nggi tayanchi.</p>
+    </div>
+    <div class="realm-card">
+      <h3>Mordor</h3>
+      <p>Kulrang tog'lar bilan o'ralgan, xavf va zulmat hukm suradigan qorong'u yurt.</p>
+    </div>
+    <div class="realm-card">
+      <h3>Moria</h3>
+      <p>Tog' ostidagi ulkan va sirli qadimiy konlar tarmog'i.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider">⟡</div>
+
+<section id="races">
+  <div class="eyebrow">Xalqlar</div>
+  <h2 class="section-title">O'rta Yer irqlari</h2>
+  <p class="section-desc">Har biri o'z tarixi, xarakteri va yashash tarziga ega bo'lgan turli xalqlar bu dunyoni to'ldiradi.</p>
+
+  <div class="race-grid">
+    <div class="race-card">
+      <div class="race-icon">🌿</div>
+      <h3>Hobbitlar</h3>
+      <p>Bo'yi past, oyoq kiyim kiymaydigan, tinchliksevar va o'z uylariga bog'langan kichik xalq. Shire diyorida yashashadi, sarguzashtdan ko'ra bog'dorchilik va tinch hayotni afzal ko'rishadi. Ammo kerak bo'lganda ularning yuragida kutilmagan jasorat uyg'onadi.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">🌿</div>
+        <div>
+          <div class="hero-name">Frodo Baggins</div>
+          <div class="hero-role">Uzuk tashuvchisi</div>
+          <div class="hero-bio">Tinch Shire diyoridan chiqib, Ortayerni qutqarish uchun eng og'ir yukni o'z zimmasiga olgan sodda qalbli hobbit.</div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-icon">🏹</div>
+      <h3>Elflar</h3>
+      <p>Abadiy umr ko'ruvchi, nozik va donishmand xalq. Tabiat, san'at va bilimga chuqur bog'langan. Ko'zlari o'tkir, qadamlari sezilmas, ovozlari qo'shiqqa o'xshaydi. Ko'pchiligi asta-sekin O'rta Yerni tark etib, g'arbga — abadiy yurtga qaytmoqda.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">🏹</div>
+        <div>
+          <div class="hero-name">O'rmon Farzandi</div>
+          <div class="hero-role">Elf mergani</div>
+          <div class="hero-bio">Keskin ko'zli va tezkor, kamon otishda tengsiz, sheriklikka qo'shilgan sodiq elf jangchisi.</div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-icon">🪓</div>
+      <h3>Gnomlar</h3>
+      <p>Tog' ostidagi konlarda yashovchi, temirchilik va tosh ishlariga usta xalq. Kuchli, qat'iyatli va o'z urug'iga sodiq. Boyliklari va qadimiy shaharlari qorong'u chuqurliklar ostida yashiringan.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">🪓</div>
+        <div>
+          <div class="hero-name">Tog' O'g'loni</div>
+          <div class="hero-role">Gimli</div>
+          <div class="hero-bio">Bolta ustasi Gloinni o`g`li va qat'iyatli hamroh, o'z xalqining qadimiy an'analarini g'urur bilan olib yuruvchi jasur gnom.</div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-icon">⚔</div>
+      <h3>Odamlar</h3>
+      <p>Qisqa umr ko'rsalar-da, eng ko'p tarqalgan va turli-tuman xalq. Ba'zilari qudratli qirolliklar (Gondor, Rohan) qurishgan, ba'zilari esa yovuzlik ta'siriga berilib ketishgan. Kelajak ko'p jihatdan ularning qo'lida.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">⚔</div>
+        <div>
+          <div class="hero-name">Yashirin Meros Vorisi</div>
+          <div class="hero-role">Sarson jangchi</div>
+          <div class="hero-bio">Qadimiy qirollik naslidan, uzoq yillar soyada yurgan, ammo o'z taqdirini nihoyat qabul qiluvchi jangchi.</div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-icon">✦</div>
+      <h3>Sehrgarlar (Istari)</h3>
+      <p>Uzoq yurtlardan yuborilgan, insoniy qiyofada yurgan qudratli mavjudotlar. Sanoqlari kam, lekin ta'siri katta — ular xalqlarni yovuzlikka qarshi birlashtirish uchun yordam berishadi.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">✦</div>
+        <div>
+          <div class="hero-name">Kulrang Sayohatchi</div>
+          <div class="hero-role">Donishmand sehrgar</div>
+          <div class="hero-bio">Qudratli maslahatchi va ustoz, sheriklikni xavf-xatarlar orasida yo'naltiruvchi qadimiy bilim egasi.</div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-icon">👁</div>
+      <h3>Orklar</h3>
+      <p>Zulmat kuchlari xizmatidagi shafqatsiz va vahshiy jangchilar. Qorong'u joylarda to'da bo'lib yashashadi, urush va vayronagarchilikdan boshqa maqsadlari yo'q.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">👁</div>
+        <div>
+          <div class="hero-name">Zulmat Sarkardasi</div>
+          <div class="hero-role">Ork lashkarboshisi</div>
+          <div class="hero-bio">Qorong'u qal'alarda to'da-to'da jangchilarni boshqaruvchi, shafqatsizligi bilan nom qozongan sarkarda.</div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-icon">🌲</div>
+      <h3>Entlar</h3>
+      <p>O'rmonlarning qadimiy qo'riqchilari — daraxtga o'xshash, sekin gapiradigan, ammo juda uzoq umr ko'radigan mavjudotlar. Tabiatga zarar yetkazilganda ularning g'azabi dahshatli bo'ladi.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">🌲</div>
+        <div>
+          <div class="hero-name">Daraxtlar Cho'poni</div>
+          <div class="hero-role">Ent oqsoqoli</div>
+          <div class="hero-bio">Ming yillik o'rmonning eng qadimiy qo'riqchisi, sekin va vazmin, lekin g'azablanganda daxshatli kuchga ega.</div>
+        </div>
+      </div>
+    </div>
+    <div class="race-card">
+      <div class="race-icon">🐴</div>
+      <h3>Rohan</h3>
+      <p>Keng dashtlarda yashovchi, otliq jangda mislsiz mahoratga ega xalq. Ularning hayoti ot, sharaf va jangovar an'analar bilan chambarchas bog'liq.</p>
+      <div class="hero-mini">
+        <div class="hero-avatar">🐴</div>
+        <div>
+          <div class="hero-name">Dashtlar Malikasi</div>
+          <div class="hero-role">Otliq jangchi</div>
+          <div class="hero-bio">Qilich va otga usta, sharaf yo'lida jangga chiqishdan qo'rqmagan mard va sadoqatli qahramon.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">⟡</div>
+
+<section id="game">
+  <div class="eyebrow">Interaktiv</div>
+  <h2 class="section-title">O'yinni yuklab oling</h2>
+  <div class="game-box">
+    <div class="ring-glyph"></div>
+    <h3>Uzuklar Hukmdori: Sarguzasht</h3>
+    <p>The lord of the ring olamiga mansub strategik o`yin o`yinni o`rnating va mazza qilib do`stlaringiz bilan o`ynang</p>
+    <a class="btn" href="/media/games/lotr-game-setup.exe" download>O'yinni o'rnatish</a>
+  </div>
+</section>
+
+<div class="divider">⟡</div>
+
+<section id="chat">
+  <div class="eyebrow">Jonli aloqa</div>
+  <h2 class="section-title">Muhokama</h2>
+  <p class="section-desc">Boshqa tashrifchilar bilan real vaqtda fikr almashing — matn, rasm va stikerlar bilan.</p>
+
+  <div class="chat-box">
+    <div class="chat-messages" id="chat-messages">
+      {% for m in chat_messages %}
+        <div class="chat-msg">
+          <span class="who">{{ m.name }}</span><span class="when">{{ m.created_at|date:"H:i" }}</span>
+          {% if m.message_type == 'image' and m.image %}
+            <div class="txt"><img src="{{ m.image.url }}" alt="rasm" class="chat-img"></div>
+          {% elif m.message_type == 'sticker' %}
+            <div class="txt chat-sticker">{{ m.sticker }}</div>
+          {% else %}
+            <div class="txt">{{ m.text }}</div>
+          {% endif %}
+        </div>
+      {% empty %}
+        <div class="chat-empty" id="chat-empty">Hozircha xabarlar yo'q. Birinchi bo'lib yozing!</div>
+      {% endfor %}
+    </div>
+
+    <div class="sticker-panel" id="sticker-panel">
+      <div class="sticker-grid">
+        <button type="button" class="sticker-btn" data-sticker="💍">💍</button>
+        <button type="button" class="sticker-btn" data-sticker="⚔️">⚔️</button>
+        <button type="button" class="sticker-btn" data-sticker="🏹">🏹</button>
+        <button type="button" class="sticker-btn" data-sticker="🪓">🪓</button>
+        <button type="button" class="sticker-btn" data-sticker="🌳">🌳</button>
+        <button type="button" class="sticker-btn" data-sticker="🏔️">🏔️</button>
+        <button type="button" class="sticker-btn" data-sticker="🐴">🐴</button>
+        <button type="button" class="sticker-btn" data-sticker="🔥">🔥</button>
+        <button type="button" class="sticker-btn" data-sticker="✨">✨</button>
+        <button type="button" class="sticker-btn" data-sticker="🛡️">🛡️</button>
+        <button type="button" class="sticker-btn" data-sticker="🌙">🌙</button>
+        <button type="button" class="sticker-btn" data-sticker="⭐">⭐</button>
+        <button type="button" class="sticker-btn" data-sticker="👑">👑</button>
+        <button type="button" class="sticker-btn" data-sticker="🗡️">🗡️</button>
+        <button type="button" class="sticker-btn" data-sticker="🦅">🦅</button>
+        <button type="button" class="sticker-btn" data-sticker="🌲">🌲</button>
+      </div>
+    </div>
+
+    <form class="chat-form" id="chat-form">
+      {% csrf_token %}
+      <input type="text" id="chat-name" placeholder="Ismingiz" maxlength="60" {% if user.is_authenticated %}value="{{ user.username }}" readonly{% endif %}>
+      <button type="button" class="chat-icon-btn" id="sticker-toggle" title="Stiker">😊</button>
+      <button type="button" class="chat-icon-btn" id="image-toggle" title="Rasm yuborish">📷</button>
+      <input type="file" id="chat-image-input" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+      <input type="text" id="chat-text" placeholder="Xabaringizni yozing..." maxlength="500" autocomplete="off">
+      <button type="submit">Yuborish</button>
+    </form>
+  </div>
+  <p class="chat-status offline" id="chat-status">Ulanmoqda...</p>
+</section>
+
+<div class="divider">⟡</div>
+
+<section id="gandalf">
+  <div class="eyebrow">Donishmand yordamchi</div>
+  <h2 class="section-title">Gandalfdan so'rang</h2>
+  <p class="section-desc">Sayt yoki O'rta Yer haqida savolingiz bormi? Kulrang sayohatchi javob berishga tayyor.</p>
+
+  <div class="gandalf-box">
+    <div class="gandalf-messages" id="gandalf-messages">
+      <div class="gandalf-msg gandalf-welcome">
+        <span class="gandalf-avatar">✦</span>
+        <div class="gandalf-bubble">Salom, sayohatchi! Men Gandalfman. Menga xohlagan savolingizni bering.</div>
+      </div>
+    </div>
+    <form class="gandalf-form" id="gandalf-form">
+      {% csrf_token %}
+      <input type="text" id="gandalf-input" placeholder="Savolingizni yozing..." maxlength="1000" autocomplete="off">
+      <button type="submit" id="gandalf-submit">So'rash</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="ring-glyph"></div>
+  <p>Bu — muxlislar tomonidan tayyorlangan norasmiy fan-sahifa bo'lib, faqat tanishtiruv maqsadida yaratilgan.</p>
+  <p class="fine">"Uzuklar Hukmdori" — J. R. R. Tolkienning mualliflik huquqi bilan himoyalangan asari. Ushbu sahifa asl matn yoki tasvirlarni o'z ichiga olmaydi va tijorat maqsadida ishlatilmaydi.</p>
+</footer>
+
+<script>
+(function(){
+  const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  const socket = new WebSocket(scheme + '://' + window.location.host + '/ws/chat/');
+  const messagesBox = document.getElementById('chat-messages');
+  const statusEl = document.getElementById('chat-status');
+  const form = document.getElementById('chat-form');
+  const nameInput = document.getElementById('chat-name');
+  const textInput = document.getElementById('chat-text');
+  const emptyNotice = document.getElementById('chat-empty');
+  const stickerToggle = document.getElementById('sticker-toggle');
+  const stickerPanel = document.getElementById('sticker-panel');
+  const imageToggle = document.getElementById('image-toggle');
+  const imageInput = document.getElementById('chat-image-input');
+
+  const savedName = localStorage_safe_get('lotr_chat_name');
+  if (savedName && !nameInput.readOnly) nameInput.value = savedName;
+
+  function localStorage_safe_get(key){
+    try { return window.localStorage ? localStorage.getItem(key) : null; } catch(e){ return null; }
+  }
+  function localStorage_safe_set(key, val){
+    try { if (window.localStorage) localStorage.setItem(key, val); } catch(e){}
+  }
+  function getCookie(name){
+    const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return match ? match.pop() : '';
+  }
+
+  socket.onopen = function(){
+    statusEl.textContent = 'Ulandi — xabarlar jonli';
+    statusEl.className = 'chat-status online';
+  };
+  socket.onclose = function(){
+    statusEl.textContent = 'Aloqa uzildi';
+    statusEl.className = 'chat-status offline';
+  };
+  socket.onerror = function(){
+    statusEl.textContent = 'Ulanishda xatolik';
+    statusEl.className = 'chat-status offline';
+  };
+
+  function renderMessage(data){
+    if (emptyNotice) emptyNotice.remove();
+    const div = document.createElement('div');
+    div.className = 'chat-msg';
+
+    let contentHTML = '';
+    if (data.message_type === 'image' && data.image_url) {
+      contentHTML = '<img class="chat-img" alt="rasm">';
+    } else if (data.message_type === 'sticker' && data.sticker) {
+      contentHTML = '<div class="txt chat-sticker"></div>';
+    } else {
+      contentHTML = '<div class="txt"></div>';
+    }
+
+    div.innerHTML = '<span class="who"></span><span class="when"></span>' + contentHTML;
+    div.querySelector('.who').textContent = data.name;
+    div.querySelector('.when').textContent = data.created_at;
+
+    if (data.message_type === 'image' && data.image_url) {
+      div.querySelector('.chat-img').src = data.image_url;
+    } else if (data.message_type === 'sticker' && data.sticker) {
+      div.querySelector('.chat-sticker').textContent = data.sticker;
+    } else {
+      div.querySelector('.txt').textContent = data.text;
+    }
+
+    messagesBox.appendChild(div);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+
+  socket.onmessage = function(e){
+    renderMessage(JSON.parse(e.data));
+  };
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    const name = nameInput.value.trim() || 'Mehmon';
+    const text = textInput.value.trim();
+    if (!text) return;
+    localStorage_safe_set('lotr_chat_name', name);
+    socket.send(JSON.stringify({ type: 'text', name: name, text: text }));
+    textInput.value = '';
+  });
+
+  // Stiker paneli
+  stickerToggle.addEventListener('click', function(){
+    stickerPanel.classList.toggle('open');
+    stickerToggle.classList.toggle('active');
+  });
+  stickerPanel.querySelectorAll('.sticker-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const name = nameInput.value.trim() || 'Mehmon';
+      localStorage_safe_set('lotr_chat_name', name);
+      socket.send(JSON.stringify({ type: 'sticker', name: name, sticker: btn.dataset.sticker }));
+      stickerPanel.classList.remove('open');
+      stickerToggle.classList.remove('active');
+    });
+  });
+
+  // Rasm yuborish
+  imageToggle.addEventListener('click', function(){
+    imageInput.click();
+  });
+  imageInput.addEventListener('change', function(){
+    const file = imageInput.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Rasm hajmi 5MB dan oshmasligi kerak.");
+      imageInput.value = '';
+      return;
+    }
+    const name = nameInput.value.trim() || 'Mehmon';
+    localStorage_safe_set('lotr_chat_name', name);
+
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('name', name);
+
+    fetch('{% url "chat_upload_image" %}', {
+      method: 'POST',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      body: formData,
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data.error) { alert(data.error); }
+      // Xabar barcha ulangan foydalanuvchilarga (shu jumladan o'zimizga) WebSocket orqali keladi
+    })
+    .catch(function(){ alert("Rasm yuborishda xatolik yuz berdi."); });
+
+    imageInput.value = '';
+  });
+
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+})();
+
+(function(){
+  const form = document.getElementById('gandalf-form');
+  const input = document.getElementById('gandalf-input');
+  const submitBtn = document.getElementById('gandalf-submit');
+  const messagesBox = document.getElementById('gandalf-messages');
+
+  function getCookie(name){
+    const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return match ? match.pop() : '';
+  }
+
+  function addMessage(text, opts){
+    opts = opts || {};
+    const div = document.createElement('div');
+    div.className = 'gandalf-msg' + (opts.isUser ? ' user-msg' : '') + (opts.isError ? ' gandalf-error' : '');
+    div.innerHTML = '<span class="gandalf-avatar">' + (opts.isUser ? '🙂' : '✦') + '</span><div class="gandalf-bubble"></div>';
+    div.querySelector('.gandalf-bubble').textContent = text;
+    messagesBox.appendChild(div);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+    return div;
+  }
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+
+    addMessage(question, { isUser: true });
+    input.value = '';
+    submitBtn.disabled = true;
+
+    const typingMsg = addMessage('Gandalf o\'ylanmoqda...', {});
+    typingMsg.querySelector('.gandalf-bubble').classList.add('gandalf-typing');
+
+    fetch('{% url "ask_gandalf" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ question: question }),
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      typingMsg.remove();
+      if (data.answer) {
+        addMessage(data.answer, {});
+      } else {
+        addMessage(data.error || "Nimadir xato ketdi.", { isError: true });
+      }
+    })
+    .catch(function(){
+      typingMsg.remove();
+      addMessage("Aloqa xatoligi yuz berdi. Qayta urinib ko'ring.", { isError: true });
+    })
+    .finally(function(){
+      submitBtn.disabled = false;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
