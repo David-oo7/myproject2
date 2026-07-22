@@ -40,9 +40,10 @@ ALLOWED_IMAGE_TYPES = {'image/jpeg', 'image/png', 'image/gif', 'image/webp'}
 MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5MB
 
 
+@login_required
 @require_POST
 def chat_upload_image(request):
-    name = (request.POST.get('name') or 'Mehmon').strip()[:60]
+    name = request.user.username
     image_file = request.FILES.get('image')
 
     if not image_file:

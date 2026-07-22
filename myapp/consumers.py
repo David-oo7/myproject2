@@ -15,6 +15,9 @@ ALLOWED_STICKERS = {
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        if self.scope['user'].is_anonymous:
+            await self.close(code=4001)
+            return
         await self.channel_layer.group_add(ROOM_GROUP_NAME, self.channel_name)
         await self.accept()
 
@@ -23,7 +26,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        name = (data.get('name') or 'Mehmon').strip()[:60]
+        name = self.scope['user'].username
         msg_type = data.get('type', 'text')
 
         if msg_type == 'sticker':

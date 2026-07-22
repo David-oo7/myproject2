@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ faction.name }} — Uzuklar Hukmdori</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent: {{ faction.color }};
+    --bg-dark:#0b0d0a; --bg-panel:#12160f;
+    --ink:#e6e0cf; --ink-dim:#a89f8a; --line: rgba(201,163,78,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:
+      radial-gradient(ellipse at top, color-mix(in srgb, var(--accent) 18%, #14170f) 0%, var(--bg-dark) 65%);
+    color:var(--ink); font-family:'Cormorant Garamond', serif; font-size:19px; line-height:1.7;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 20px;
+  }
+  h1,h2,.brand{ font-family:'Cinzel', serif; letter-spacing:.04em; }
+  .card{
+    background:var(--bg-panel); border:1px solid var(--accent); box-shadow:0 0 40px color-mix(in srgb, var(--accent) 25%, transparent);
+    max-width:640px; width:100%; padding:52px 46px; text-align:center;
+  }
+  .icon{
+    font-size:3.2rem; width:96px; height:96px; margin:0 auto 22px;
+    display:flex; align-items:center; justify-content:center; border-radius:50%;
+    border:2px solid var(--accent); box-shadow:0 0 30px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .ruler{
+    margin:0 auto 22px; display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .ruler-portrait{
+    width:140px; height:140px; border-radius:50%; object-fit:cover;
+    border:3px solid var(--accent); box-shadow:0 0 34px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  .ruler-name{ font-family:'Cinzel',serif; color:var(--accent); font-size:1rem; letter-spacing:.04em; }
+  .ruler-title{ color:var(--ink-dim); font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; font-family:'Cinzel',serif; }
+  h1{ color:var(--accent); font-size:2.2rem; margin-bottom:6px; }
+  .tagline{ color:var(--ink-dim); font-style:italic; font-size:1.05rem; margin-bottom:26px; }
+  .symbol{
+    display:inline-block; font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); border:1px solid var(--accent); padding:6px 16px; margin-bottom:26px;
+  }
+  .description{ text-align:left; margin-bottom:28px; color:var(--ink); }
+  .traits{ list-style:none; text-align:left; display:flex; flex-direction:column; gap:10px; margin-bottom:34px; }
+  .traits li{
+    padding-left:20px; position:relative; color:var(--ink-dim);
+  }
+  .traits li::before{
+    content:'⟡'; position:absolute; left:0; color:var(--accent);
+  }
+  .actions{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  .btn{
+    border:1px solid var(--accent); background:color-mix(in srgb, var(--accent) 12%, transparent); color:var(--ink);
+    padding:12px 22px; font-family:'Cinzel',serif; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase;
+    text-decoration:none; transition:.2s; display:inline-block;
+  }
+  .btn:hover{ background:var(--accent); color:#141810; }
+  .btn.ghost{ background:transparent; color:var(--ink-dim); border-color:var(--line); }
+  .btn.ghost:hover{ color:var(--ink); border-color:var(--accent); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">{{ faction.icon }}</div>
+    <h1>{{ faction.name }}</h1>
+    <p class="tagline">{{ faction.tagline }}</p>
+
+    {% if faction.ruler_image %}
+    <div class="ruler">
+      <img class="ruler-portrait" src="/media/{{ faction.ruler_image }}" alt="{{ faction.ruler_name }}"
+           onerror="this.closest('.ruler').style.display='none';">
+      <div class="ruler-name">{{ faction.ruler_name }}</div>
+      <div class="ruler-title">{{ faction.ruler_title }} — {{ faction.name }}</div>
+    </div>
+    {% endif %}
+    <span class="symbol">Ramz — {{ faction.symbol }}</span>
+    <p class="description">{{ faction.description }}</p>
+    <ul class="traits">
+      {% for trait in faction.traits %}
+        <li>{{ trait }}</li>
+      {% endfor %}
+    </ul>
+    <div class="actions">
+      <a href="{% url 'register' %}" class="btn">{{ faction.name }} safiga qo'shilish</a>
+      <a href="{% url 'faction_castle' slug %}" class="btn">Fraksiyalarni asosiy qal'asi</a>
+      <a href="{% url 'home' %}#factions" class="btn ghost">← Fraksiyalarga qaytish</a>
+    </div>
+  </div>
+</body>
+</html>
